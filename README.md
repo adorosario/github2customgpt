@@ -2,7 +2,7 @@
 
 Generate sitemaps from GitHub repositories to train custom AI chatbots. This tool helps you create AI assistants that can answer questions about your codebase and documentation.
 
-[![Coding Assistant From Github Repo](github2customgpt.png)](https://github2customgpt.streamlit.app)
+[![Coding Assistant From Github Repo](github2customgpt.png)](https://repo2customgpt.streamlit.app/)
 
 ## 🚀 Features
 
@@ -26,7 +26,7 @@ Generate sitemaps from GitHub repositories to train custom AI chatbots. This too
 
 ### Using the Live App
 
-1. Visit [GitHub Sitemap Generator](https://github2customgpt.streamlit.app)
+1. Visit [GitHub Sitemap Generator](https://repo2customgpt.streamlit.app/)
 2. Enter your GitHub repository URL, Click "Generate Sitemap" and Copy the generated sitemap URL.
 3. Use the Sitemap URL in [CustomGPT.ai](https://customgpt.ai) to create your coding assistant chatbot.
 

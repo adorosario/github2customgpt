@@ -8,8 +8,8 @@
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd <repository-name>
+   git clone git@github.com:adorosario/github2customgpt.git
+   cd github2customgpt
    ```
 
 2. Configure Streamlit:

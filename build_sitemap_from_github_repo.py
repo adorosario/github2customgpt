@@ -161,7 +161,7 @@ def main():
     page = st.sidebar.radio('Go to', ['Home', 'Instructions', 'FAQ'])
     
     if page == 'Home':
-        st.info("This free tool lets you build a sitemap from your GitHub repository. This sitemap can then be used to build a RAG-based coding assistant using [CustomGPT.ai](https://customgpt.ai/) that will answer questions and generate code based on your repo's content.")
+        st.info("This free tool lets you build a sitemap from your GitHub repository. This sitemap can then be used to build a RAG-based coding assistant using [CustomGPT.ai](https://customgpt.ai/) that will answer questions and generate code based on your repo's content. [Live Demo](https://app.customgpt.ai/projects/62249/ask-me-anything?embed=1&shareable_slug=88c28738c70071387a3a36a312eb4f27)")
         
         with st.form(key='github_form'):
             repo_url = st.text_input("Enter your GitHub repository URL:", placeholder="https://github.com/adorosario/github-raw-urls")
@@ -198,6 +198,11 @@ def main():
         st.markdown("""
         ### What is this tool?
         This tool creates a sitemap of all raw file URLs in your GitHub repository. This sitemap can be used to create a RAG-based coding assistant that can answer questions and generate code using your repository's content.
+
+        ### Is this repo open source? 
+        - [Github](https://github.com/adorosario/github2customgpt)
+        - [Live Demo](https://repo2customgpt.streamlit.app/)
+        - [Coding Assistant Demo](https://app.customgpt.ai/projects/62249/ask-me-anything?embed=1&shareable_slug=88c28738c70071387a3a36a312eb4f27)
 
         ### What URL formats are supported?
         The tool supports several GitHub repository URL formats:
