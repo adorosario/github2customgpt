@@ -35,8 +35,8 @@ Generate sitemaps from GitHub repositories to train custom AI chatbots. This too
 #### Using Docker (Recommended)
 
 ```bash
-git clone <repository-url>
-cd github-sitemap-generator
+git clone git@github.com:adorosario/github2customgpt.git
+cd github2customgpt
 docker-compose up --build
 ```
 
@@ -46,7 +46,7 @@ Visit `http://localhost:8501` in your browser.
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone github2customgpt
    cd github-sitemap-generator
    ```
 
@@ -81,7 +81,7 @@ Visit `http://localhost:8501` in your browser.
    - SSH format: `git@github.com:username/repository.git`
 
 3. **Best Practices**:
-   - Start with smaller repositories for quicker testing
+   - Start with smaller public repositories for quicker testing
    - Focus on well-documented code sections
    - Include documentation directories
    - Ensure repository is public
@@ -90,7 +90,7 @@ Visit `http://localhost:8501` in your browser.
 
 - Only works with public GitHub repositories
 - Maximum 50,000 files per repository
-- Some file types may not be suitable for AI training
+- Some file types may not be suitable for AI training (e.g images)
 - Repository must be accessible via GitHub API
 - Private repositories are not supported
 
@@ -116,7 +116,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-If you encounter any issues or have questions:
-1. Check the [FAQ](FAQ.md) section
-2. Open an issue in this repository
-3. Contact [CustomGPT Support](https://customgpt.ai/contact-us)
+If you encounter any issues or have questions, open an issue in this repository

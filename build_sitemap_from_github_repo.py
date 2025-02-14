@@ -26,42 +26,91 @@ def s3_db():
     return s3
 
 def extract_repo_details(repo_url):
-    # Extract owner and repo name
-    base_pattern = r"github\.com[:/]([\w-]+)/([\w.-]+)"
+    """
+    Extract owner, repository name, and branch from a GitHub URL.
+    Supports various GitHub URL formats including:
+    - https://github.com/owner/repo
+    - https://github.com/owner/repo.git
+    - git@github.com:owner/repo.git
+    - https://github.com/owner/repo/tree/branch
+    
+    Args:
+        repo_url (str): GitHub repository URL
+        
+    Returns:
+        tuple: (owner, repo, branch)
+    """
+    # Clean up the URL first
+    repo_url = repo_url.strip()
+    
+    # Extract owner and repo name, handling optional .git suffix
+    base_pattern = r"github\.com[:/]([\w-]+)/([\w.-]+?)(?:\.git)?(?:/|$)"
     base_match = re.search(base_pattern, repo_url)
     if not base_match:
         raise ValueError("Invalid GitHub repository URL provided.")
     
     owner, repo = base_match.groups()
     
-    # Extract branch if present in URL
+    # Extract branch if specified in the URL
+    # This handles formats like /tree/main or /tree/feature/branch
     branch_pattern = r"/tree/([^/]+(?:/[^/]+)*)"
     branch_match = re.search(branch_pattern, repo_url)
-    branch = branch_match.group(1) if branch_match else 'main'
+    branch = branch_match.group(1) if branch_match else None
+    
+    # Log the extracted details
+    st.session_state.logs.append(
+        f"Extracted repository details - "
+        f"Owner: {owner}, "
+        f"Repo: {repo}, "
+        f"Branch: {branch if branch else 'default'}"
+    )
     
     return owner, repo, branch
 
-def get_raw_urls(owner, repo, branch='main'):
-    # GitHub API URL to fetch repository contents
-    api_url = f'https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1'
-    response = requests.get(api_url)
+def get_raw_urls(owner, repo, branch=None):
+    # If no branch specified, try both main and master
+    branches_to_try = [branch] if branch else ['main', 'master']
     
-    if response.status_code != 200:
-        raise ValueError(f"Error accessing repository: {response.json().get('message', 'Unknown error')}")
+    for try_branch in branches_to_try:
+        try:
+            # GitHub API URL to fetch repository contents
+            api_url = f'https://api.github.com/repos/{owner}/{repo}/git/trees/{try_branch}?recursive=1'
+            st.session_state.logs.append(f"Trying API URL: {api_url}")
+            response = requests.get(api_url)
+            
+            if response.status_code == 200:
+                st.session_state.logs.append(f"Successfully accessed branch: {try_branch}")
+                data = response.json()
+                
+                if 'tree' not in data:
+                    st.session_state.logs.append(f"No 'tree' found in response for branch {try_branch}")
+                    continue
+                    
+                urls = []
+                # Base URL for raw content
+                base_raw_url = f'https://raw.githubusercontent.com/{owner}/{repo}/{try_branch}/'
+                st.session_state.logs.append(f"Using base raw URL: {base_raw_url}")
+                
+                # Loop through the contents of the repository
+                for file in data.get('tree', []):
+                    if file['type'] == 'blob':
+                        raw_url = base_raw_url + file['path']
+                        urls.append(raw_url)
+                
+                if urls:  # Only return if we found some files
+                    st.session_state.logs.append(f"Found {len(urls)} files in branch {try_branch}")
+                    return urls
+                else:
+                    st.session_state.logs.append(f"No files found in branch {try_branch}, trying next option...")
+            else:
+                st.session_state.logs.append(f"Branch {try_branch} not accessible (Status: {response.status_code}, Response: {response.text}), trying next option...")
+                
+        except Exception as e:
+            st.session_state.logs.append(f"Error processing branch {try_branch}: {str(e)}")
+            continue  # Try next branch if there's an error processing this one
     
-    data = response.json()
-    urls = []
-
-    # Base URL for raw content
-    base_raw_url = f'https://raw.githubusercontent.com/{owner}/{repo}/{branch}/'
-
-    # Loop through the contents of the repository
-    for file in data.get('tree', []):
-        if file['type'] == 'blob':
-            raw_url = base_raw_url + file['path']
-            urls.append(raw_url)
-
-    return urls
+    # If we get here, none of the branches worked
+    raise ValueError(f"Could not access repository content. Tried branches: {', '.join(branches_to_try)}. Please ensure the repository exists, is public, and contains files.")
 
 def generate_sitemap(urls):
     all_urls = []

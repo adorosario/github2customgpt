@@ -24,4 +24,4 @@ RUN useradd -m -r streamlit && \
 USER streamlit
 
 # Command to run the application
-CMD ["streamlit", "run", "github_sitemap_generator.py", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "build_sitemap_from_github_repo.py", "--server.address=0.0.0.0"]

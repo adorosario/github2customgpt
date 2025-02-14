@@ -1,5 +1,5 @@
 __pycache__
-.streamlit/config.toml
+.streamlit/secrets.toml
 /data/*.xml
 myenv
 .idea
