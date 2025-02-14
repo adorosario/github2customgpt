@@ -1,0 +1,15 @@
+[server]
+#maxUploadSize = 10
+
+[runner]
+magicEnabled = false
+
+[ui]
+#hideTopBar = true
+
+[aws_s3]
+accountid = "customgpt-streamlit"
+access_key_id = "XXX"
+access_key_secret "XXX"
+
+[global]
